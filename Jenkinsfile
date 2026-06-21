@@ -1,11 +1,16 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Source code checkout successful'
+                git branch: 'main',
+                url: 'https://github.com/ajaaykrishna87/DevOps-Project.git'
             }
         }
 
