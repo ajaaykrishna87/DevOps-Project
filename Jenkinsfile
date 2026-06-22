@@ -16,14 +16,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker images'
+                sh 'docker build -t flask-devops-app:${BUILD_NUMBER} .'
             }
         }
 
-        stage('Verify Environment') {
+        stage('Verify Docker Image') {
             steps {
-                sh 'pwd'
-                sh 'ls -la'
+                sh 'docker images | grep flask-devops-app'
             }
         }
     }
