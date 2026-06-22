@@ -1,15 +1,32 @@
+# Python
 venv/
 __pycache__/
 *.pyc
 
+# Environment
 .env
 
+# IDE
 .vscode/
+.idea/
 
+# Logs
 *.log
 
+# AWS
 *.pem
-
 .aws/
 
-.idea/
+# Build artifacts
+*.tar
+minikube-linux-amd64
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.*
+terraform/tfplan*
+
+# Temporary files
+*.swp
