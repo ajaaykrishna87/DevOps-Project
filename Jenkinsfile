@@ -1,7 +1,6 @@
 pipeline {
 agent any
 
-```
 environment {
     AWS_REGION = 'eu-north-1'
     ECR_REPO = '805046891242.dkr.ecr.eu-north-1.amazonaws.com/flask-devops-app'
@@ -76,7 +75,4 @@ stages {
             }
         }
     }
-}
-```
-
 }
