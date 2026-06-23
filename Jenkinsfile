@@ -17,7 +17,7 @@ stages {
     stage('Checkout') {
         steps {
             git branch: 'main',
-            url: 'https://github.com/ajaaykrishna87/DevOps-Project.git'
+                url: 'https://github.com/ajaaykrishna87/DevOps-Project.git'
         }
     }
 
@@ -40,8 +40,7 @@ stages {
                 string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
             ]) {
                 sh '''
-                aws ecr get-login-password --region $AWS_REGION | \
-                docker login --username AWS --password-stdin $ECR_REPO
+                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                 '''
             }
         }
@@ -50,8 +49,7 @@ stages {
     stage('Tag Image') {
         steps {
             sh '''
-            docker tag flask-devops-app:${BUILD_NUMBER} \
-            $ECR_REPO:${BUILD_NUMBER}
+            docker tag flask-devops-app:${BUILD_NUMBER} $ECR_REPO:${BUILD_NUMBER}
             '''
         }
     }
@@ -66,24 +64,13 @@ stages {
 
     stage('Deploy to EC2') {
         steps {
-            sshagent(credentials: ['ec2-ssh-key']) {
+            sshagent(['ec2-ssh-key']) {
                 sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "
-
-                aws ecr get-login-password --region eu-north-1 | \
-                sudo docker login --username AWS --password-stdin \
-                805046891242.dkr.ecr.eu-north-1.amazonaws.com
-
-                sudo docker pull \
-                805046891242.dkr.ecr.eu-north-1.amazonaws.com/flask-devops-app:${BUILD_NUMBER}
-
+                sudo docker pull $ECR_REPO:${BUILD_NUMBER}
                 sudo docker stop flask-app || true
                 sudo docker rm flask-app || true
-
-                sudo docker run -d \
-                --name flask-app \
-                -p 5000:5000 \
-                805046891242.dkr.ecr.eu-north-1.amazonaws.com/flask-devops-app:${BUILD_NUMBER}
+                sudo docker run -d --name flask-app -p 5000:5000 $ECR_REPO:${BUILD_NUMBER}
                 "
                 '''
             }
